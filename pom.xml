@@ -432,6 +432,7 @@
       </activation>
       <modules>
         <module>ambari-serviceadvisor</module>
+        <module>ambari-utility</module>
         <module>ambari-web</module>
         <module>ambari-project</module>
         <module>ambari-views</module>
@@ -451,6 +452,7 @@
       </activation>
       <modules>
         <module>ambari-serviceadvisor</module>
+        <module>ambari-utility</module>
         <module>ambari-web</module>
         <module>ambari-project</module>
         <module>ambari-views</module>
@@ -471,6 +473,7 @@
         <module>ambari-funtest</module>
         <module>ambari-agent</module>
         <module>ambari-serviceadvisor</module>
+        <module>ambari-utility</module>
       </modules>
     </profile>
     <profile>
@@ -489,6 +492,7 @@
         <module>ambari-funtest</module>
         <module>ambari-agent</module>
         <module>ambari-serviceadvisor</module>
+        <module>ambari-utility</module>
         </modules>
     </profile>
     <profile>
@@ -506,6 +510,7 @@
       </activation>
       <modules>
         <module>ambari-serviceadvisor</module>
+        <module>ambari-utility</module>
         <module>ambari-web</module>
         <module>ambari-project</module>
         <module>ambari-views</module>
