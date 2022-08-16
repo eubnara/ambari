@@ -160,6 +160,22 @@
           <configLocation>../ambari-server/checkstyle.xml</configLocation>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.vafer</groupId>
+        <artifactId>jdeb</artifactId>
+        <executions>
+          <execution>
+            <phase>none</phase>
+            <goals>
+              <goal>jdeb</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>true</skip>
+          <submodules>false</submodules>
+        </configuration>
+      </plugin>
     </plugins>
   </build>  
   

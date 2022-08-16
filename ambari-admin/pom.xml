@@ -148,6 +148,7 @@
                 <argument>run</argument>
                 <argument>test-single-run</argument>
               </arguments>
+              <skip>${skipTests}</skip>
             </configuration>
           </execution>
         </executions>
