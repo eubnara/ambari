@@ -120,7 +120,9 @@ public class AgentCommandsPublisher {
             populateExecutionCommandsClusters(executionCommandsClusters, hostId, ac, desiredConfigs);
           });
         }).get();
-      } catch (InterruptedException|ExecutionException ignored) {}
+      } catch (InterruptedException|ExecutionException e) {
+        LOG.debug("Ignored error on sendAgentCommand", e);
+      }
 
       try {
         threadPools.getAgentPublisherCommandsPool().submit(() -> {
@@ -132,7 +134,9 @@ public class AgentCommandsPublisher {
             ));
           });
         }).get();
-      } catch (InterruptedException|ExecutionException ignored) {}
+      } catch (InterruptedException|ExecutionException e) {
+        LOG.debug("Ignored error on sendAgentCommand", e);
+      }
     }
   }
 
