@@ -121,7 +121,8 @@ public class AgentCommandsPublisher {
           });
         }).get();
       } catch (InterruptedException|ExecutionException e) {
-        LOG.debug("Ignored error on sendAgentCommand", e);
+        LOG.error("Exception on sendAgentCommand", e);
+        throw new RuntimeException(e);
       }
 
       try {
@@ -135,7 +136,8 @@ public class AgentCommandsPublisher {
           });
         }).get();
       } catch (InterruptedException|ExecutionException e) {
-        LOG.debug("Ignored error on sendAgentCommand", e);
+        LOG.error("Exception on sendAgentCommand", e);
+        throw new RuntimeException(e);
       }
     }
   }
