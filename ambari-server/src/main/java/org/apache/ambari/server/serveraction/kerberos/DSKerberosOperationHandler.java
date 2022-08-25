@@ -294,10 +294,10 @@ public class DSKerberosOperationHandler extends KerberosOperationHandler {
                 String key = entry.getKey();
                 Object value = entry.getValue();
 
-                if ("unicodePwd".equals(key)) {
+                if ("userPassword".equals(key)) {
                     if (value instanceof String) {
                         try {
-                            attributes.put(new BasicAttribute("unicodePwd", String.format("\"%s\"", password).getBytes("UTF-16LE")));
+                            attributes.put(new BasicAttribute("userPassword", String.format("\"%s\"", password).getBytes("UTF-16LE")));
                         } catch (UnsupportedEncodingException ue) {
                             throw new KerberosOperationException("Can not encode password with UTF-16LE", ue);
                         }
@@ -375,7 +375,7 @@ public class DSKerberosOperationHandler extends KerberosOperationHandler {
                 ldapContext.modifyAttributes(
                         new LdapName(dn),
                         new ModificationItem[]{
-                                new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("unicodePwd", String.format("\"%s\"", password).getBytes("UTF-16LE")))
+                                new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userPassword", String.format("\"%s\"", password).getBytes("UTF-16LE")))
                         }
                 );
             } else {
