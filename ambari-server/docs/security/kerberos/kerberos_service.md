@@ -107,7 +107,7 @@ If the `kdc_type` is `active-directory`, this property is mandatory.
 
 The supported (space-delimited) list of session key encryption types that should be returned by the KDC.
 
-_Default value:_ aes des3-cbc-sha1 rc4 des-cbc-md5
+_Default value:_ aes des3-cbc-sha1 des-cbc-md5
 
 ##### realm
 
