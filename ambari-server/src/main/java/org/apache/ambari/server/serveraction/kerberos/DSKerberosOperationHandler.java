@@ -20,7 +20,6 @@ package org.apache.ambari.server.serveraction.kerberos;
 
 
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
@@ -296,11 +295,7 @@ public class DSKerberosOperationHandler extends KerberosOperationHandler {
 
                 if ("userPassword".equals(key)) {
                     if (value instanceof String) {
-                        try {
-                            attributes.put(new BasicAttribute("userPassword", String.format("\"%s\"", password).getBytes("UTF-16LE")));
-                        } catch (UnsupportedEncodingException ue) {
-                            throw new KerberosOperationException("Can not encode password with UTF-16LE", ue);
-                        }
+                        attributes.put(new BasicAttribute("userPassword", password));
                     }
                 } else {
                     Attribute attribute = new BasicAttribute(key);
@@ -375,7 +370,7 @@ public class DSKerberosOperationHandler extends KerberosOperationHandler {
                 ldapContext.modifyAttributes(
                         new LdapName(dn),
                         new ModificationItem[]{
-                                new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userPassword", String.format("\"%s\"", password).getBytes("UTF-16LE")))
+                                new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userPassword", password))
                         }
                 );
             } else {
@@ -383,8 +378,6 @@ public class DSKerberosOperationHandler extends KerberosOperationHandler {
             }
         } catch (NamingException e) {
             throw new KerberosOperationException(String.format("Can not set password for principal %s: %s", principal, e.getMessage()), e);
-        } catch (UnsupportedEncodingException e) {
-            throw new KerberosOperationException("Unsupported encoding UTF-16LE", e);
         }
 
         return 0;
