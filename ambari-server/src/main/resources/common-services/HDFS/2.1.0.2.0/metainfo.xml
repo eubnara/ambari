@@ -23,7 +23,7 @@
       <displayName>HDFS</displayName>
       <serviceType>HDFS</serviceType> <!-- This tag is used only for main fileSystem service. It sets filesystem schema for ambari -->
       <comment>Apache Hadoop Distributed File System</comment>
-      <version>2.1.0.2.0</version>
+      <version>3.3.4-1</version>
 
       <components>
         <component>
@@ -33,6 +33,7 @@
           <cardinality>1-2</cardinality>
           <versionAdvertised>true</versionAdvertised>
           <reassignAllowed>true</reassignAllowed>
+          <timelineAppid>namenode</timelineAppid>
           <dependencies>
             <dependency>
               <name>HDFS/ZKFC</name>
@@ -121,6 +122,20 @@
                 <scriptType>PYTHON</scriptType>
               </commandScript>
             </customCommand>
+            <customCommand>
+              <name>PRINT_TOPOLOGY</name>
+              <commandScript>
+                <script>scripts/namenode.py</script>
+                <scriptType>PYTHON</scriptType>
+              </commandScript>
+            </customCommand>
+            <customCommand>
+              <name>RECONFIGURE</name>
+              <commandScript>
+                <script>scripts/namenode.py</script>
+                <scriptType>PYTHON</scriptType>
+              </commandScript>
+            </customCommand>
           </customCommands>
         </component>
 
@@ -131,6 +146,7 @@
           <cardinality>1+</cardinality>
           <versionAdvertised>true</versionAdvertised>
           <decommissionAllowed>true</decommissionAllowed>
+          <timelineAppid>datanode</timelineAppid>
           <commandScript>
             <script>scripts/datanode.py</script>
             <scriptType>PYTHON</scriptType>
@@ -157,6 +173,7 @@
           <versionAdvertised>true</versionAdvertised>
           <reassignAllowed>true</reassignAllowed>
           <category>MASTER</category>
+          <timelineAppid>namenode</timelineAppid>
           <commandScript>
             <script>scripts/snamenode.py</script>
             <scriptType>PYTHON</scriptType>
@@ -197,7 +214,7 @@
               <type>env</type>
               <fileName>log4j.properties</fileName>
               <dictionaryName>hdfs-log4j,yarn-log4j</dictionaryName>
-            </configFile>                          
+            </configFile>
             <configFile>
               <type>env</type>
               <fileName>hadoop-env.sh</fileName>
@@ -267,19 +284,13 @@
 
       <osSpecifics>
         <osSpecific>
-          <osFamily>any</osFamily>
+          <osFamily>redhat7</osFamily>
           <packages>
             <package>
-              <name>hadoop</name>
+              <name>hadoop_${stack_version}</name>
             </package>
-          </packages>
-        </osSpecific>
-        
-        <osSpecific>
-          <osFamily>amazonlinux2,redhat6,redhat7,suse11</osFamily>
-          <packages>
             <package>
-              <name>hadoop-client</name>
+              <name>hadoop_${stack_version}-client</name>
             </package>
             <package>
               <name>snappy</name>
@@ -288,64 +299,22 @@
               <name>snappy-devel</name>
             </package>
             <package>
-              <name>hadoop-libhdfs</name>
+              <name>hadoop_${stack_version}-libhdfs</name>
             </package>
             <package>
               <name>libtirpc-devel</name>
             </package>
           </packages>
         </osSpecific>
-        
-        <osSpecific>
-          <osFamily>suse12</osFamily>
-          <packages>
-            <package>
-              <name>hadoop-client</name>
-            </package>
-            <package>
-              <name>snappy</name>
-            </package>
-            <package>
-              <name>snappy-devel</name>
-            </package>
-            <package>
-              <name>hadoop-libhdfs</name>
-            </package>
-          </packages>
-        </osSpecific>
-
-        <osSpecific>
-          <osFamily>debian7,ubuntu12,ubuntu14,ubuntu16</osFamily>
-          <packages>
-            <package>
-              <name>hadoop-client</name>
-            </package>
-            <package>
-              <name>libsnappy1</name>
-            </package>
-            <package>
-              <name>libsnappy-dev</name>
-            </package>
-            <package>
-              <name>hadoop-hdfs</name>
-            </package>
-            <package>
-              <name>libhdfs0</name>
-            </package>
-            <package>
-              <name>libhdfs0-dev</name>
-            </package>
-          </packages>
-        </osSpecific>
-            
       </osSpecifics>
+
 
       <commandScript>
         <script>scripts/service_check.py</script>
         <scriptType>PYTHON</scriptType>
         <timeout>300</timeout>
       </commandScript>
-      
+
       <configuration-dependencies>
         <config-type>core-site</config-type>
         <config-type>hdfs-site</config-type>
@@ -361,7 +330,18 @@
       </configuration-dependencies>
       <restartRequiredAfterRackChange>true</restartRequiredAfterRackChange>
 
+      <quickLinksConfigurations>
+        <quickLinksConfiguration>
+          <fileName>quicklinks.json</fileName>
+          <default>true</default>
+        </quickLinksConfiguration>
+      </quickLinksConfigurations>
+
       <themes>
+        <theme>
+          <fileName>theme.json</fileName>
+          <default>true</default>
+        </theme>
         <theme>
           <fileName>directories.json</fileName>
           <default>true</default>
