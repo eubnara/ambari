@@ -152,6 +152,15 @@
             <scriptType>PYTHON</scriptType>
             <timeout>1200</timeout>
           </commandScript>
+          <customCommands>
+            <customCommand>
+              <name>REFRESH_NAMENODES</name>
+              <commandScript>
+                <script>scripts/datanode.py</script>
+                <scriptType>PYTHON</scriptType>
+              </commandScript>
+            </customCommand>
+          </customCommands>
           <bulkCommands>
             <displayName>DataNodes</displayName>
             <!-- Used by decommission and recommission -->

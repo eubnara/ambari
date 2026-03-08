@@ -78,6 +78,20 @@ class DataNode(Script):
     Logger.info("RELOAD CONFIGS")
     reconfig("datanode", params.dfs_dn_ipc_address)
 
+  def refresh_namenodes(self, env):
+    import params
+
+    env.set_params(params)
+    Logger.info("REFRESH NAMENODES")
+
+    if params.security_enabled:
+      Execute(params.nn_kinit_cmd, user=params.hdfs_user)
+
+    refresh_cmd = format(
+      "hdfs --config {hadoop_conf_dir} dfsadmin -refreshNamenodes {dfs_dn_ipc_address}"
+    )
+    Execute(refresh_cmd, user=params.hdfs_user, logoutput=True, path=params.hadoop_bin_dir)
+
   def start(self, env, upgrade_type=None):
     import params
 

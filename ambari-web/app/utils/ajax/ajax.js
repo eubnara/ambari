@@ -3276,6 +3276,25 @@ var urls = {
       }
     }
   },
+  'nameNode.federation.refreshDataNodes': {
+    'real': '/clusters/{clusterName}/requests',
+    'mock': '',
+    'format': function (data) {
+      return {
+        type: 'POST',
+        data: JSON.stringify({
+          "RequestInfo": {
+            "command" : "REFRESH_NAMENODES", "context" : "Refresh DataNodes"
+          },
+          "Requests/resource_filters": [{
+            "service_name" : "HDFS",
+            "component_name" : "DATANODE",
+            "hosts": data.hosts
+          }]
+        })
+      }
+    }
+  },
   'hiveServerInteractive.getStatus': {
     real: '',
     mock: '',

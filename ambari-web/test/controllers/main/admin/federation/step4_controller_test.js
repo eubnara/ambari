@@ -18,7 +18,7 @@
 
 var App = require('app');
 
-describe('App.NameNodeFederationWizardStep3Controller', function () {
+describe('App.NameNodeFederationWizardStep4Controller', function () {
   var controller;
   var mocks = [
     {component: 'NAMENODE', isInstalled: false, hostName: 'test1'},
@@ -32,34 +32,6 @@ describe('App.NameNodeFederationWizardStep3Controller', function () {
 
   after(function () {
     controller.destroy();
-  });
-
-  describe('#removeUnneededTasks', function () {
-    beforeEach(function () {
-      sinon.stub(controller, 'removeTasks');
-    });
-    afterEach(function () {
-      controller.removeTasks.restore();
-      App.Service.find.restore();
-    });
-
-    it('should call remove tasks with 3 services', function () {
-      sinon.stub(App.Service, 'find').returns([{serviceName: 'AMBARI_INFRA_SOLR'}, {serviceName: 'HIVE'}]);
-      controller.removeUnneededTasks();
-      expect(controller.removeTasks.calledWith(['startInfraSolr', 'startRangerAdmin', 'startRangerUsersync'])).to.be.true;
-    });
-
-    it('should not call remove tasks', function () {
-      sinon.stub(App.Service, 'find').returns([]);
-      controller.removeUnneededTasks();
-      expect(controller.removeTasks.calledOnce).to.be.false;
-    });
-
-    it('should call remove tasks with one param', function () {
-      sinon.stub(App.Service, 'find').returns([{serviceName: 'RANGER'}, {serviceName: 'HIVE'}]);
-      controller.removeUnneededTasks();
-      expect(controller.removeTasks.calledWith(['startInfraSolr'])).to.be.true;
-    });
   });
 
   describe('#newNameNodeHosts', function () {
@@ -137,46 +109,6 @@ describe('App.NameNodeFederationWizardStep3Controller', function () {
     });
   });
 
-  describe('#startJournalNodes', function () {
-    it('should call updateComponent with proper params', function () {
-      sinon.stub(App.HostComponent, 'find').returns([
-        {componentName: 'JOURNALNODE', hostName: 'test5'},
-        {componentName: 'TEST', hostName: 'test6'},
-      ]);
-      sinon.stub(controller, 'updateComponent');
-      controller.startJournalNodes();
-      expect(controller.updateComponent.calledWith(
-        'JOURNALNODE', ['test5'], "HDFS", "Start"
-      )).to.be.true;
-      App.HostComponent.find.restore();
-      controller.updateComponent.restore();
-    });
-  });
-
-  describe('#startNameNodes', function () {
-    it('should call updateComponent with proper params', function () {
-      sinon.stub(controller, 'updateComponent');
-      controller.set('content.masterComponentHosts', mocks);
-      controller.startNameNodes();
-      expect(controller.updateComponent.calledWith(
-        'NAMENODE', ['test3'], "HDFS", "Start"
-      )).to.be.true;
-      controller.updateComponent.restore();
-    });
-  });
-
-  describe('#startZKFCs', function () {
-    it('should call updateComponent with proper params', function () {
-      sinon.stub(controller, 'updateComponent');
-      controller.set('content.masterComponentHosts', mocks);
-      controller.startZKFCs();
-      expect(controller.updateComponent.calledWith(
-        'ZKFC', ['test3'], "HDFS", "Start"
-      )).to.be.true;
-      controller.updateComponent.restore();
-    });
-  });
-
   describe('#formatNameNode', function () {
     it('should send ajax request with first of newNameNodeHosts', function () {
       controller.set('content.masterComponentHosts', mocks);
@@ -209,40 +141,8 @@ describe('App.NameNodeFederationWizardStep3Controller', function () {
     });
   });
 
-  describe('#startRangerAdmin', function () {
-    it('should call updateComponent with proper params', function () {
-      sinon.stub(controller, 'updateComponent');
-      sinon.stub(App.HostComponent, 'find').returns([
-        {componentName: 'RANGER_ADMIN', hostName: 'test5'},
-        {componentName: 'TEST', hostName: 'test6'},
-      ]);
-      controller.startRangerAdmin();
-      expect(controller.updateComponent.calledWith(
-        'RANGER_ADMIN', ['test5'], "RANGER", "Start"
-      )).to.be.true;
-      controller.updateComponent.restore();
-      App.HostComponent.find.restore();
-    });
-  });
-
-  describe('#startRangerUsersync', function () {
-    it('should call updateComponent with proper params', function () {
-      sinon.stub(controller, 'updateComponent');
-      sinon.stub(App.HostComponent, 'find').returns([
-        {componentName: 'RANGER_USERSYNC', hostName: 'test5'},
-        {componentName: 'TEST', hostName: 'test6'},
-      ]);
-      controller.startRangerUsersync();
-      expect(controller.updateComponent.calledWith(
-        'RANGER_USERSYNC', ['test5'], "RANGER", "Start"
-      )).to.be.true;
-      controller.updateComponent.restore();
-      App.HostComponent.find.restore();
-    });
-  });
-
   describe('#bootstrapNameNode', function () {
-    it('should send ajax request with first of newNameNodeHosts', function () {
+    it('should send ajax request with second of newNameNodeHosts', function () {
       controller.set('content.masterComponentHosts', mocks);
       controller.bootstrapNameNode();
       expect(App.ajax.send.calledWith({
@@ -254,6 +154,27 @@ describe('App.NameNodeFederationWizardStep3Controller', function () {
         success: 'startPolling',
         error: 'onTaskError'
       })).to.be.true;
+    });
+  });
+
+  describe('#refreshDataNodes', function () {
+    it('should send ajax request to refresh all DataNodes', function () {
+      sinon.stub(App.HostComponent, 'find').returns([
+        {componentName: 'DATANODE', hostName: 'test5'},
+        {componentName: 'DATANODE', hostName: 'test6'},
+        {componentName: 'TEST', hostName: 'test7'},
+      ]);
+      controller.refreshDataNodes();
+      expect(App.ajax.send.calledWith({
+        name: 'nameNode.federation.refreshDataNodes',
+        sender: controller,
+        data: {
+          hosts: 'test5,test6'
+        },
+        success: 'startPolling',
+        error: 'onTaskError'
+      })).to.be.true;
+      App.HostComponent.find.restore();
     });
   });
 });
